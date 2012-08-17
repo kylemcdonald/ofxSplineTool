@@ -7,10 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		27075EC414B922E600F2D554 /* CurveLut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27075EC214B922E600F2D554 /* CurveLut.cpp */; };
-		27BC9CF214B8ADA80041147F /* ofxCurvesTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27BC9CF014B8ADA80041147F /* ofxCurvesTool.cpp */; };
+		27BC9CF214B8ADA80041147F /* ofxSplineTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27BC9CF014B8ADA80041147F /* ofxSplineTool.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
-		E4328149138ABC9F0047C5CB /* openFrameworks.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworks.a */; };
+		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
 		E45BE97D0E8CC7DD009D7055 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9730E8CC7DD009D7055 /* AudioToolbox.framework */; };
@@ -59,10 +58,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		27075EC214B922E600F2D554 /* CurveLut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CurveLut.cpp; path = ../src/CurveLut.cpp; sourceTree = SOURCE_ROOT; };
-		27075EC314B922E600F2D554 /* CurveLut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurveLut.h; path = ../src/CurveLut.h; sourceTree = SOURCE_ROOT; };
-		27BC9CF014B8ADA80041147F /* ofxCurvesTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxCurvesTool.cpp; path = ../src/ofxCurvesTool.cpp; sourceTree = SOURCE_ROOT; };
-		27BC9CF114B8ADA80041147F /* ofxCurvesTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxCurvesTool.h; path = ../src/ofxCurvesTool.h; sourceTree = SOURCE_ROOT; };
+		27BC9CF014B8ADA80041147F /* ofxSplineTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxSplineTool.cpp; path = ../src/ofxSplineTool.cpp; sourceTree = SOURCE_ROOT; };
+		27BC9CF114B8ADA80041147F /* ofxSplineTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxSplineTool.h; path = ../src/ofxSplineTool.h; sourceTree = SOURCE_ROOT; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -92,7 +89,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
-				E4328149138ABC9F0047C5CB /* openFrameworks.a in Frameworks */,
+				E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */,
 				E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */,
 				E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */,
 				E45BE97D0E8CC7DD009D7055 /* AudioToolbox.framework in Frameworks */,
@@ -111,21 +108,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		27BC9CE814B8AD810041147F /* ofxCurvesTool */ = {
+		27BC9CE814B8AD810041147F /* ofxSplineTool */ = {
 			isa = PBXGroup;
 			children = (
 				27BC9CE914B8AD880041147F /* src */,
 			);
-			name = ofxCurvesTool;
+			name = ofxSplineTool;
 			sourceTree = "<group>";
 		};
 		27BC9CE914B8AD880041147F /* src */ = {
 			isa = PBXGroup;
 			children = (
-				27075EC214B922E600F2D554 /* CurveLut.cpp */,
-				27075EC314B922E600F2D554 /* CurveLut.h */,
-				27BC9CF014B8ADA80041147F /* ofxCurvesTool.cpp */,
-				27BC9CF114B8ADA80041147F /* ofxCurvesTool.h */,
+				27BC9CF014B8ADA80041147F /* ofxSplineTool.cpp */,
+				27BC9CF114B8ADA80041147F /* ofxSplineTool.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -133,7 +128,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				27BC9CE814B8AD810041147F /* ofxCurvesTool */,
+				27BC9CE814B8AD810041147F /* ofxSplineTool */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -168,7 +163,7 @@
 		E4328144138ABC890047C5CB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E4328148138ABC890047C5CB /* openFrameworks.a */,
+				E4328148138ABC890047C5CB /* openFrameworksDebug.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -267,10 +262,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		E4328148138ABC890047C5CB /* openFrameworks.a */ = {
+		E4328148138ABC890047C5CB /* openFrameworksDebug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = openFrameworks.a;
+			path = openFrameworksDebug.a;
 			remoteRef = E4328147138ABC890047C5CB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -299,8 +294,7 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
-				27BC9CF214B8ADA80041147F /* ofxCurvesTool.cpp in Sources */,
-				27075EC414B922E600F2D554 /* CurveLut.cpp in Sources */,
+				27BC9CF214B8ADA80041147F /* ofxSplineTool.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 
-#include "ofxCurvesTool.h"
+#include "ofxSplineTool.h"
 
 class ofApp : public ofBaseApp {
 public:
@@ -11,7 +11,6 @@ public:
 	void draw();
 	void keyPressed(int key);
 	
-	ofxCurvesTool curvesTool;
-	ofImage img;
+	ofxSplineTool splineTool;
 	bool show;
 };

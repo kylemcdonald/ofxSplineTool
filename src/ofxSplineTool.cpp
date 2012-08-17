@@ -1,16 +1,4 @@
-#include "ofxCurvesTool.h"
-
-ofxCurvesTool::ofxCurvesTool()
-:mouseX(0)
-,mouseY(0)
-,hoverState(false)
-,dragState(false)
-,curHover(0)
-,focus(false)
-,drawing(false)
-,drawn(false) {
-	ofAddListener(ofEvents.draw, this, &ofxCurvesTool::drawEvent);
-}
+#include "ofxSplineTool.h"
 
 GLdouble modelviewMatrix[16], projectionMatrix[16];
 GLint viewport[4];
@@ -29,7 +17,86 @@ ofVec3f worldToScreen(ofVec3f world) {
 	return screen;
 }
 
-void ofxCurvesTool::draw(int x, int y) {
+ofxSplineTool::ofxSplineTool()
+:mouseX(0)
+,mouseY(0)
+,hoverState(false)
+,dragState(false)
+,curHover(0)
+,focus(false)
+,drawing(false)
+,drawn(false) {
+	ofAddListener(ofEvents().draw, this, &ofxSplineTool::drawEvent);
+}
+
+void ofxSplineTool::setup(int n, int curveResolution) {
+	this->n = n;
+	this->curveResolution = curveResolution;
+}
+
+void ofxSplineTool::add(ofVec2f controlPoint) {
+	controlPoints.push_back(controlPoint);
+	update();
+}
+
+void ofxSplineTool::insert(ofVec2f controlPoint) {
+	if(size() < 2) {
+		add(controlPoint);
+	} else {
+		unsigned int index;
+		polyline.getClosestPoint(controlPoint, &index);
+		if(index == (curveResolution * (size() - 1)) - 1) {
+			add(controlPoint);
+			return;
+		} else if(index == 0) {
+			index = -1;
+		} else {
+			index /= curveResolution;
+		}
+		controlPoints.insert(controlPoints.begin() + index + 1, controlPoint);
+		update();
+	}
+}
+
+void ofxSplineTool::set(int i, ofVec2f controlPoint) {
+	controlPoints[i] = controlPoint;
+	update();
+}
+
+void ofxSplineTool::remove(int i) {
+	controlPoints.erase(controlPoints.begin() + i);
+	update();
+}
+
+int ofxSplineTool::size() const {
+	return controlPoints.size();
+}
+
+void ofxSplineTool::update() {
+	polyline.clear();
+	path.clear();
+	path.setFilled(false);
+	path.setCurveResolution(curveResolution);
+	int m = size();
+	if(m > 1) {
+		path.curveTo(controlPoints.front());
+		for(int i = 0; i < m; i++) {
+			ofVec2f& cur = controlPoints[i];
+			path.curveTo(cur);
+		}
+		path.curveTo(controlPoints.back());
+		vector<ofPolyline>& outline = path.getOutline();
+		if(!outline.empty()) {
+			polyline = outline[0];
+		}
+	}
+}
+
+ofVec2f ofxSplineTool::snap(const ofVec2f& point) {
+	return polyline.getClosestPoint(point);
+}
+
+void ofxSplineTool::draw(int x, int y) {
 	drawn = true; // we've made a call to draw
 	
 	ofPushStyle();
@@ -53,15 +120,15 @@ void ofxCurvesTool::draw(int x, int y) {
 		ofLine(i, 0, i, n);
 	}
 	
-	// diagonal, crosshairs
+	// crosshairs
 	ofSetColor(100);
 	ofVec2f cur;
 	if(hoverState || dragState) {
 		cur = controlPoints[curHover];
 	} else {
-		cur = ofVec2f(mouseX, lut[(int) mouseX]);
+		unsigned int curControlPoint;
+		cur = snap(ofVec2f(mouseX, mouseY));
 	}
-	ofLine(0, 0, n, n);
 	if(focus) {
 		ofLine(0, cur.y, n, cur.y);
 		ofLine(cur.x, 0, cur.x, n);
@@ -73,15 +140,10 @@ void ofxCurvesTool::draw(int x, int y) {
 	ofRect(.5, .5, n - 1, n - 1);
 	
 	// curve
-	ofNoFill();
-	ofBeginShape();
-	for(int x = 0; x < n; x++) {
-		ofVertex(x, lut[x]);
-	}
-	ofEndShape();
+	int m = controlPoints.size();
+	polyline.draw();
 	
 	// control points
-	int m = controlPoints.size();
 	for(int i = 0; i < m; i++) {
 		ofPushMatrix();
 		ofVec2f& cur = controlPoints[i];
@@ -110,7 +172,7 @@ void ofxCurvesTool::draw(int x, int y) {
 	ofPopStyle();
 }
 
-void ofxCurvesTool::save(string filename) {
+void ofxSplineTool::save(string filename) {
 	ofFile out(filename, ofFile::WriteOnly);
 	out << "[";
 	int m = controlPoints.size();
@@ -125,7 +187,7 @@ void ofxCurvesTool::save(string filename) {
 }
 
 // basic yml list-of-lists parser 
-void ofxCurvesTool::load(string filename) {
+void ofxSplineTool::load(string filename) {
 	if(ofFile(filename).exists()) {
 		string in = ofFile(filename).readToBuffer();
 		ofStringReplace(in, " ", "");
@@ -141,7 +203,7 @@ void ofxCurvesTool::load(string filename) {
 	}
 }
 
-void ofxCurvesTool::updateMouse(ofMouseEventArgs& args) {
+void ofxSplineTool::updateMouse(ofMouseEventArgs& args) {
 	mouseX = args.x - drawPosition.x;
 	mouseY = n - (args.y - drawPosition.y);
 	focus = dragState;
@@ -157,7 +219,7 @@ void ofxCurvesTool::updateMouse(ofMouseEventArgs& args) {
 		hoverState = false;
 		for(int i = 0; i < m; i++) {
 			ofVec2f& cur = controlPoints[i];
-			if(abs(cur.x - mouseX) < minDistance) {
+			if(cur.distance(snap(ofVec2f(mouseX, mouseY))) < minDistance) {
 				curHover = i;
 				hoverState = true;
 			}
@@ -165,15 +227,15 @@ void ofxCurvesTool::updateMouse(ofMouseEventArgs& args) {
 	}
 }
 
-void ofxCurvesTool::mouseMoved(ofMouseEventArgs& args) {
+void ofxSplineTool::mouseMoved(ofMouseEventArgs& args) {
 	updateMouse(args);
 }
 
-void ofxCurvesTool::mousePressed(ofMouseEventArgs& args) {
+void ofxSplineTool::mousePressed(ofMouseEventArgs& args) {
 	updateMouse(args);
 	if(focus) {
 		if(!hoverState) {
-			add(ofVec2f(mouseX, mouseY));
+			insert(ofVec2f(mouseX, mouseY));
 			updateMouse(args);
 		}
 		dragState = true;
@@ -181,7 +243,7 @@ void ofxCurvesTool::mousePressed(ofMouseEventArgs& args) {
 	}
 }
 
-void ofxCurvesTool::mouseDragged(ofMouseEventArgs& args) {
+void ofxSplineTool::mouseDragged(ofMouseEventArgs& args) {
 	updateMouse(args);
 	if(dragState) {
 		set(curHover, ofVec2f(mouseX, mouseY));
@@ -190,12 +252,12 @@ void ofxCurvesTool::mouseDragged(ofMouseEventArgs& args) {
 	}
 }
 
-void ofxCurvesTool::mouseReleased(ofMouseEventArgs& args) {
+void ofxSplineTool::mouseReleased(ofMouseEventArgs& args) {
 	updateMouse(args);
 	dragState = false;
 }
 
-void ofxCurvesTool::keyPressed(ofKeyEventArgs& args) {
+void ofxSplineTool::keyPressed(ofKeyEventArgs& args) {
 	if((args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE) && hoverState) {
 		remove(curHover);
 		hoverState = false;
@@ -209,7 +271,7 @@ void ofxCurvesTool::keyPressed(ofKeyEventArgs& args) {
  drawn flag. in that case, we unregister events. if it changes from being off
  to on, then we register the events again.
  */
-void ofxCurvesTool::drawEvent(ofEventArgs& args) {
+void ofxSplineTool::drawEvent(ofEventArgs& args) {
 	bool prevDrawing = drawing;
 	drawing = drawn;
 	if(drawing != prevDrawing) {
