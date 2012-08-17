@@ -92,6 +92,20 @@ void ofxSplineTool::update() {
 	}
 }
 
+ofVec2f ofxSplineTool::get(float t) {
+	if(size()) {
+		vector<ofPoint>& points = polyline.getVertices();
+		int n = points.size();
+		float tn = t * n;
+		ofVec2f left = points[(int) ofClamp(tn, 0, n - 1)];
+		ofVec2f right = points[(int) ofClamp(tn + 1, 0, n - 1)];
+		float subt = tn - (int) tn;
+		return left.getInterpolated(right, subt);
+	} else {
+		return ofVec2f();
+	}
+}
+
 ofVec2f ofxSplineTool::snap(const ofVec2f& point) {
 	return polyline.getClosestPoint(point);
 }
@@ -106,8 +120,6 @@ void ofxSplineTool::draw(int x, int y) {
 	drawPosition = worldToScreen(ofVec2f(0, 0));
 	
 	ofPushMatrix();
-	ofTranslate(0, n);
-	ofScale(1, -1);
 	
 	ofSetColor(ofColor::black);
 	ofFill();
@@ -205,7 +217,7 @@ void ofxSplineTool::load(string filename) {
 
 void ofxSplineTool::updateMouse(ofMouseEventArgs& args) {
 	mouseX = args.x - drawPosition.x;
-	mouseY = n - (args.y - drawPosition.y);
+	mouseY = args.y - drawPosition.y;
 	focus = dragState;
 	if(ofRectangle(0, 0, n, n).inside(mouseX, mouseY)) {
 		focus = true;
@@ -219,7 +231,7 @@ void ofxSplineTool::updateMouse(ofMouseEventArgs& args) {
 		hoverState = false;
 		for(int i = 0; i < m; i++) {
 			ofVec2f& cur = controlPoints[i];
-			if(cur.distance(snap(ofVec2f(mouseX, mouseY))) < minDistance) {
+			if(cur.distance(ofVec2f(mouseX, mouseY)) < minDistance) {
 				curHover = i;
 				hoverState = true;
 			}

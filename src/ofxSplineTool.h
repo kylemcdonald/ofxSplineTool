@@ -11,6 +11,7 @@ public:
 	void add(ofVec2f controlPoint);
 	void set(int i, ofVec2f controlPoint);
 	void remove(int i);
+	ofVec2f get(float t);
 	
 	ofVec2f snap(const ofVec2f& point);
 	
