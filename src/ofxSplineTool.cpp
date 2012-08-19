@@ -121,10 +121,6 @@ void ofxSplineTool::draw(int x, int y) {
 	
 	ofPushMatrix();
 	
-	ofSetColor(ofColor::black);
-	ofFill();
-	ofRect(0, 0, n, n);
-	
 	// grid
 	ofSetColor(50);
 	for(int i = 0; i < n; i += 64) {
