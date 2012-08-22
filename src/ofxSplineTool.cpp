@@ -44,8 +44,9 @@ void ofxSplineTool::insert(ofVec2f controlPoint) {
 		add(controlPoint);
 	} else {
 		unsigned int index;
+		int n = polyline.size();
 		polyline.getClosestPoint(controlPoint, &index);
-		if(index == (curveResolution * (size() - 1)) - 1) {
+		if(index == n - 1) {
 			add(controlPoint);
 			return;
 		} else if(index == 0) {
@@ -87,16 +88,25 @@ void ofxSplineTool::update() {
 		path.curveTo(controlPoints.back());
 		vector<ofPolyline>& outline = path.getOutline();
 		if(!outline.empty()) {
-			polyline = outline[0];
+			ofPolyline& pathPolyline = outline[0];
+			for(int i = 0; i < pathPolyline.size(); i++) {
+				polyline.addVertex(pathPolyline[i]);
+				// skip extra vertices
+				// https://github.com/openframeworks/openFrameworks/issues/1500
+				if((i + 1) % curveResolution == 0) {
+					i++;
+				}
+			}
 		}
 	}
+	length = polyline.getPerimeter();
 }
 
 ofVec2f ofxSplineTool::get(float t) {
 	if(size()) {
 		vector<ofPoint>& points = polyline.getVertices();
 		int n = points.size();
-		float tn = t * n;
+		float tn = t * (n - 1);
 		ofVec2f left = points[(int) ofClamp(tn, 0, n - 1)];
 		ofVec2f right = points[(int) ofClamp(tn + 1, 0, n - 1)];
 		float subt = tn - (int) tn;
@@ -104,6 +114,10 @@ ofVec2f ofxSplineTool::get(float t) {
 	} else {
 		return ofVec2f();
 	}
+}
+
+float ofxSplineTool::getLength() const {
+	return length;
 }
 
 ofVec2f ofxSplineTool::snap(const ofVec2f& point) {

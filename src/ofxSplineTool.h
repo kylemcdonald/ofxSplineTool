@@ -12,6 +12,7 @@ public:
 	void set(int i, ofVec2f controlPoint);
 	void remove(int i);
 	ofVec2f get(float t);
+	float getLength() const;
 	
 	ofVec2f snap(const ofVec2f& point);
 	
@@ -35,6 +36,7 @@ protected:
 	ofPolyline polyline;
 	vector<ofVec2f> controlPoints;
 	int n, curveResolution;
+	float length;
 	
 	ofVec2f drawPosition;
 	
