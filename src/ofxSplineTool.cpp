@@ -29,8 +29,9 @@ ofxSplineTool::ofxSplineTool()
 	ofAddListener(ofEvents().draw, this, &ofxSplineTool::drawEvent);
 }
 
-void ofxSplineTool::setup(int n, int curveResolution) {
-	this->n = n;
+void ofxSplineTool::setup(int width, int height, int curveResolution) {
+	this->width = width;
+	this->height = height;
 	this->curveResolution = curveResolution;
 }
 
@@ -62,6 +63,10 @@ void ofxSplineTool::insert(ofVec2f controlPoint) {
 void ofxSplineTool::set(int i, ofVec2f controlPoint) {
 	controlPoints[i] = controlPoint;
 	update();
+}
+
+const vector<ofVec2f>& ofxSplineTool::getControlPoints() const {
+	return controlPoints;
 }
 
 void ofxSplineTool::remove(int i) {
@@ -137,9 +142,11 @@ void ofxSplineTool::draw(int x, int y) {
 	
 	// grid
 	ofSetColor(50);
-	for(int i = 0; i < n; i += 64) {
-		ofLine(0, i, n, i);
-		ofLine(i, 0, i, n);
+	for(int i = 0; i < width; i += 64) {
+		ofLine(0, i, width, i);
+	}
+	for(int i = 0; i < height; i += 64) {
+		ofLine(i, 0, i, height);
 	}
 	
 	// crosshairs
@@ -152,14 +159,14 @@ void ofxSplineTool::draw(int x, int y) {
 		cur = snap(ofVec2f(mouseX, mouseY));
 	}
 	if(focus) {
-		ofLine(0, cur.y, n, cur.y);
-		ofLine(cur.x, 0, cur.x, n);
+		ofLine(0, cur.y, width, cur.y);
+		ofLine(cur.x, 0, cur.x, height);
 	}
 	
 	// outline
 	ofSetColor(ofColor::white);
 	ofNoFill();
-	ofRect(.5, .5, n - 1, n - 1);
+	ofRect(.5, .5, width - 1, height - 1);
 	
 	// curve
 	int m = controlPoints.size();
@@ -229,13 +236,13 @@ void ofxSplineTool::updateMouse(ofMouseEventArgs& args) {
 	mouseX = args.x - drawPosition.x;
 	mouseY = args.y - drawPosition.y;
 	focus = dragState;
-	if(ofRectangle(0, 0, n, n).inside(mouseX, mouseY)) {
+	if(ofRectangle(0, 0, width, height).inside(mouseX, mouseY)) {
 		focus = true;
 	} else {
 		hoverState = false;
 	}
-	mouseX = ofClamp(mouseX, 0, n - 1);
-	mouseY = ofClamp(mouseY, 0, n - 1);
+	mouseX = ofClamp(mouseX, 0, width - 1);
+	mouseY = ofClamp(mouseY, 0, height - 1);
 	int m = controlPoints.size();
 	if(focus && !dragState) {
 		hoverState = false;

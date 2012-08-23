@@ -4,12 +4,13 @@
 
 class ofxSplineTool {
 public:
-	void setup(int n = 256, int curveResolution = 16);
+	void setup(int width = 256, int height = 256, int curveResolution = 16);
 	
 	int size() const;
 	void insert(ofVec2f controlPoint);
 	void add(ofVec2f controlPoint);
 	void set(int i, ofVec2f controlPoint);
+	const vector<ofVec2f>& getControlPoints() const;
 	void remove(int i);
 	ofVec2f get(float t);
 	float getLength() const;
@@ -35,7 +36,7 @@ protected:
 	ofPath path;
 	ofPolyline polyline;
 	vector<ofVec2f> controlPoints;
-	int n, curveResolution;
+	int width, height, curveResolution;
 	float length;
 	
 	ofVec2f drawPosition;
