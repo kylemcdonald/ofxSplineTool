@@ -142,10 +142,10 @@ void ofxSplineTool::draw(int x, int y) {
 	
 	// grid
 	ofSetColor(50);
-	for(int i = 0; i < width; i += 64) {
+	for(int i = 0; i < height; i += 64) {
 		ofLine(0, i, width, i);
 	}
-	for(int i = 0; i < height; i += 64) {
+	for(int i = 0; i < width; i += 64) {
 		ofLine(i, 0, i, height);
 	}
 	
