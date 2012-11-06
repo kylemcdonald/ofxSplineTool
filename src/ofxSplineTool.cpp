@@ -69,6 +69,10 @@ const vector<ofVec2f>& ofxSplineTool::getControlPoints() const {
 	return controlPoints;
 }
 
+ofRectangle ofxSplineTool::getBoundingBox() const {
+	return boundingBox;
+}
+
 void ofxSplineTool::remove(int i) {
 	controlPoints.erase(controlPoints.begin() + i);
 	update();
@@ -105,6 +109,7 @@ void ofxSplineTool::update() {
 		}
 	}
 	length = polyline.getPerimeter();
+	boundingBox = polyline.getBoundingBox();
 }
 
 ofVec2f ofxSplineTool::get(float t) {
@@ -127,6 +132,20 @@ float ofxSplineTool::getLength() const {
 
 ofVec2f ofxSplineTool::snap(const ofVec2f& point) {
 	return polyline.getClosestPoint(point);
+}
+
+ofVec2f ofxSplineTool::snapY(const ofVec2f& point) {
+	float nearestDistance = 0;
+	float nearestY = 0;
+	for(int i = 0; i < polyline.size(); i++) {
+		float distance = abs(point.x - polyline[i].x);
+		if(i == 0 || distance < nearestDistance) {
+			nearestDistance = distance;
+			nearestY = polyline[i].y;
+		}
+	}
+	ofVec2f nearer(point.x, nearestY);
+	return snap(nearer);
 }
 
 void ofxSplineTool::draw(int x, int y) {
@@ -186,7 +205,7 @@ void ofxSplineTool::draw(int x, int y) {
 			ofCircle(0, 0, 3);
 		} else {
 			ofFill();
-			ofCircle(0, 0, 2);
+			ofCircle(0, 0, 6);
 		}
 		ofPopMatrix();
 	}

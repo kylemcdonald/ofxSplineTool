@@ -14,8 +14,10 @@ public:
 	void remove(int i);
 	ofVec2f get(float t);
 	float getLength() const;
+	ofRectangle getBoundingBox() const;
 	
 	ofVec2f snap(const ofVec2f& point);
+	ofVec2f snapY(const ofVec2f& point);
 	
 	void draw(int x = 0, int y = 0);
 	void save(string filename);
@@ -35,6 +37,7 @@ protected:
 	void update();
 	ofPath path;
 	ofPolyline polyline;
+	ofRectangle boundingBox;
 	vector<ofVec2f> controlPoints;
 	int width, height, curveResolution;
 	float length;
