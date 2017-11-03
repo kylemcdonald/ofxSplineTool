@@ -25,6 +25,9 @@ public:
 	
 	// these are only used internally
 	ofxSplineTool();
+	void mouseEntered(ofMouseEventArgs& args);
+	void mouseExited(ofMouseEventArgs& args);
+	void mouseScrolled(ofMouseEventArgs& args);
 	void mouseMoved(ofMouseEventArgs& args);
 	void mousePressed(ofMouseEventArgs& args);
 	void mouseDragged(ofMouseEventArgs& args);

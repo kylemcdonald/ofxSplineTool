@@ -95,7 +95,7 @@ void ofxSplineTool::update() {
 			path.curveTo(cur);
 		}
 		path.curveTo(controlPoints.back());
-		vector<ofPolyline>& outline = path.getOutline();
+		vector<ofPolyline> outline = path.getOutline();
 		if(!outline.empty()) {
 			ofPolyline& pathPolyline = outline[0];
 			for(int i = 0; i < pathPolyline.size(); i++) {
@@ -273,6 +273,18 @@ void ofxSplineTool::updateMouse(ofMouseEventArgs& args) {
 			}
 		}
 	}
+}
+
+void ofxSplineTool::mouseEntered(ofMouseEventArgs& args) {
+	updateMouse(args);
+}
+
+void ofxSplineTool::mouseExited(ofMouseEventArgs& args) {
+	updateMouse(args);
+}
+
+void ofxSplineTool::mouseScrolled(ofMouseEventArgs& args) {
+	updateMouse(args);
 }
 
 void ofxSplineTool::mouseMoved(ofMouseEventArgs& args) {
